@@ -49,7 +49,12 @@ async function run() {
       const result =await alliteamCollection.insertOne(allItem)
       res.send(result)
     })
-    
+    app.get('/items',async(req,res)=>{
+      const cursor = alliteamCollection.find();
+      const result = await cursor.toArray();
+      res.send(result)
+    })
+
 
 
 
