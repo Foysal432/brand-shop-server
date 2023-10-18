@@ -30,6 +30,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     const brandCollection =client.db('brandDB').collection('brands')
+    const alliteamCollection=client.db('brandDB').collection('alliteam')
     app.get('/brands',async(req,res)=>{
         const cursor = brandCollection.find();
         const result = await cursor.toArray();
