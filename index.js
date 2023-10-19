@@ -31,16 +31,34 @@ async function run() {
     await client.connect();
     const brandCollection =client.db('brandDB').collection('brands')
     const alliteamCollection=client.db('brandDB').collection('items')
+    const addCardCollection=client.db('brandDB').collection('addproduct')
     app.get('/brands',async(req,res)=>{
         const cursor = brandCollection.find();
         const result = await cursor.toArray();
         res.send(result)
     })
 
+// addcardget
+app.get('/addproduct/:email',async(req,res)=>{
+  const cursor = addCardCollection.find();
+  const result = await cursor.toArray();
+  res.send(result)
+})
+app.post('/addproduct/',async(req,res)=>{
+  const newCart =req.body;
+  console.log(newCart);
+  const result = await addCardCollection.insertOne(newCart)
+  res.send(result);
+})
+
+
+
+
+
 // get all brand item
 app.get('/items/:brand',async(req,res)=>{
   const brand = req.params.brand;
-  const query ={brand:(brand)}
+  const query ={brand:brand}
   const branditem = alliteamCollection.find(query);
   const result = await branditem.toArray() 
   res.send(result)
@@ -54,6 +72,37 @@ app.get('/items1/:detail',async(req,res)=>{
   const user = await alliteamCollection.findOne(query);
   res.send(user)
 })
+
+// // update item
+app.get('/update/:id',async(req,res)=>{
+  const id =req.params.id;
+  const query ={_id:new ObjectId(id)};
+  const user = await alliteamCollection.findOne(query);
+  res.send(user)
+})
+
+
+// update
+app.put('/update/:id',async(req,res)=>{
+  const id =req.params.id;
+  const filter ={_id: new ObjectId(id)}
+  const options ={upsert:true};
+  const updateditem = req.body;
+  const iteam ={
+    $set:{
+      name:updateditem.name,
+      brand:updateditem.brand,
+      type:updateditem.type,
+      price:updateditem.price,
+      rating:updateditem.rating,
+      description:updateditem.description,
+      image:updateditem.image
+    }
+  }
+  const result =await alliteamCollection.updateOne(filter,iteam,options);
+  res.send(result)
+})
+
 
 
     app.post('/brands', async(req,res)=>{
@@ -76,8 +125,6 @@ app.get('/items1/:detail',async(req,res)=>{
     })
 
   
-
-
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
