@@ -41,9 +41,20 @@ async function run() {
 app.get('/items/:brand',async(req,res)=>{
   const brand = req.params.brand;
   const query ={brand:(brand)}
-  const branditem =await alliteamCollection.findOne(query);
-  res.send(branditem)
+  const branditem = alliteamCollection.find(query);
+  const result = await branditem.toArray() 
+  res.send(result)
 })
+
+
+// get detail a item
+app.get('/items1/:detail',async(req,res)=>{
+  const detail =req.params.detail;
+  const query ={_id: new ObjectId(detail)};
+  const user = await alliteamCollection.findOne(query);
+  res.send(user)
+})
+
 
     app.post('/brands', async(req,res)=>{
         const newBrands =req.body;
