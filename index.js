@@ -38,11 +38,13 @@ async function run() {
         res.send(result)
     })
 
+
 // addcardget
 app.get('/addproduct/:email',async(req,res)=>{
-  const cursor = addCardCollection.find();
-  const result = await cursor.toArray();
-  res.send(result)
+  const email = req.params.email;
+ const query ={email:email}
+ const user =await addCardCollection.findOne(query);
+  res.send(user)
 })
 app.post('/addproduct/',async(req,res)=>{
   const newCart =req.body;
