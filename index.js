@@ -39,18 +39,35 @@ async function run() {
     })
 
 
-// addcardget
+// // addcardget
+// app.get('/addproduct/:email',async(req,res)=>{
+//   const email = req.params.email;
+//  const query ={email:email}
+//  const user =await addCardCollection.findOne(query);
+//   res.send(user)
+// })
 app.get('/addproduct/:email',async(req,res)=>{
   const email = req.params.email;
- const query ={email:email}
- const user =await addCardCollection.findOne(query);
-  res.send(user)
+  const query ={email:email}
+  const user = addCardCollection.find(query);
+  const result = await user.toArray() 
+  res.send(result)
 })
-app.post('/addproduct/',async(req,res)=>{
-  const newCart =req.body;
-  console.log(newCart);
-  const result = await addCardCollection.insertOne(newCart)
-  res.send(result);
+
+// add product post
+ // alliteamcollection
+ app.post('/addproduct',async(req,res)=>{
+  const card =req.body;
+  console.log(card);
+  const result =await addCardCollection.insertOne(card)
+  res.send(result)
+})
+
+
+app.get('/addproduct',async(req,res)=>{
+  const cursor = addCardCollection.find();
+  const result = await cursor.toArray();
+  res.send(result)
 })
 
 
